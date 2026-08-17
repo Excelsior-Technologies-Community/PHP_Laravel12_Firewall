@@ -10,4 +10,9 @@ class BlockedIp extends Model
         'ip_address',
         'reason',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
 }
