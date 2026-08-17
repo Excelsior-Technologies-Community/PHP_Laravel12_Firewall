@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,43 +11,51 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
+
         .header h1 {
             font-size: 32px;
             margin-bottom: 10px;
         }
+
         .content {
             padding: 30px;
         }
+
         .form-group {
             background: #f7f9fc;
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 30px;
         }
+
         .form-group h3 {
             margin-bottom: 20px;
             color: #333;
         }
+
         input[type="text"] {
             width: 100%;
             padding: 12px;
@@ -56,10 +65,12 @@
             font-size: 14px;
             transition: border-color 0.3s;
         }
+
         input[type="text"]:focus {
             outline: none;
             border-color: #667eea;
         }
+
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -70,9 +81,11 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
+
         button:hover {
             transform: translateY(-2px);
         }
+
         .alert {
             padding: 15px;
             background: #d4edda;
@@ -80,9 +93,11 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
         .ip-list {
             list-style: none;
         }
+
         .ip-item {
             background: #f7f9fc;
             padding: 15px;
@@ -93,35 +108,43 @@
             align-items: center;
             transition: background 0.3s;
         }
+
         .ip-item:hover {
             background: #eef2f7;
         }
+
         .ip-info {
             flex: 1;
         }
+
         .ip-address {
             font-weight: bold;
             color: #333;
             font-size: 16px;
         }
+
         .ip-reason {
             color: #666;
             font-size: 14px;
             margin-top: 5px;
         }
+
         .ip-date {
             color: #999;
             font-size: 12px;
             margin-top: 5px;
         }
+
         .delete-form {
             margin-left: 15px;
         }
+
         .delete-btn {
             background: linear-gradient(135deg, #f56565 0%, #c53030 100%);
             padding: 8px 15px;
             font-size: 14px;
         }
+
         .empty-state {
             text-align: center;
             padding: 40px;
@@ -129,6 +152,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -138,9 +162,9 @@
 
         <div class="content">
             @if(session('success'))
-                <div class="alert">
-                    {{ session('success') }}
-                </div>
+            <div class="alert">
+                {{ session('success') }}
+            </div>
             @endif
 
             <div class="form-group">
@@ -152,38 +176,105 @@
                     <button type="submit">Block IP</button>
                 </form>
                 @error('ip_address')
-                    <p style="color: #f56565; margin-top: 10px;">{{ $message }}</p>
+                <p style="color: #f56565; margin-top: 10px;">{{ $message }}</p>
                 @enderror
             </div>
 
             <h3 style="margin-bottom: 20px;">Blocked IP List</h3>
-            
+
             @if($ips->count() > 0)
-                <div class="ip-list">
-                    @foreach($ips as $ip)
-                        <div class="ip-item">
-                            <div class="ip-info">
-                                <div class="ip-address">{{ $ip->ip_address }}</div>
-                                @if($ip->reason)
-                                    <div class="ip-reason">Reason: {{ $ip->reason }}</div>
-                                @endif
-                                <div class="ip-date">Blocked: {{ $ip->created_at->diffForHumans() }}</div>
-                            </div>
-                            <form method="POST" action="{{ route('firewall.delete', $ip->id) }}" class="delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to unblock this IP?')">Unblock</button>
-                            </form>
-                        </div>
-                    @endforeach
+            <div class="ip-list">
+                @foreach($ips as $ip)
+                <div class="ip-item">
+                    <div class="ip-info">
+                        <div class="ip-address">{{ $ip->ip_address }}</div>
+                        @if($ip->reason)
+                        <div class="ip-reason">Reason: {{ $ip->reason }}</div>
+                        @endif
+                        <div class="ip-date">Blocked: {{ $ip->created_at->diffForHumans() }}</div>
+                    </div>
+                    <form method="POST" action="{{ route('firewall.delete', $ip->id) }}" class="delete-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to unblock this IP?')">Unblock</button>
+                    </form>
                 </div>
+                @endforeach
+            </div>
             @else
-                <div class="empty-state">
-                    <p>No IP addresses are currently blocked.</p>
-                    <p style="font-size: 48px; margin-top: 20px;">🛡️</p>
-                </div>
+            <div class="empty-state">
+                <p>No IP addresses are currently blocked.</p>
+                <p style="font-size: 48px; margin-top: 20px;">🛡️</p>
+            </div>
+            @endif
+
+            <hr style="margin: 35px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+            <h3 style="margin-bottom: 20px;">
+                🚨 Recent Blocked Access Attempts
+            </h3>
+
+            @if($attempts->count() > 0)
+
+            <div style="overflow-x: auto;">
+
+                <table style="width: 100%; border-collapse: collapse;">
+
+                    <thead>
+                        <tr style="background: #f7f9fc;">
+                            <th style="padding: 12px; text-align: left;">IP Address</th>
+                            <th style="padding: 12px; text-align: left;">Method</th>
+                            <th style="padding: 12px; text-align: left;">URL</th>
+                            <th style="padding: 12px; text-align: left;">Time</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach($attempts as $attempt)
+
+                        <tr style="border-bottom: 1px solid #eee;">
+
+                            <td style="padding: 12px;">
+                                <strong>{{ $attempt->ip_address }}</strong>
+                            </td>
+
+                            <td style="padding: 12px;">
+                                {{ $attempt->method }}
+                            </td>
+
+                            <td style="padding: 12px; word-break: break-all;">
+                                {{ $attempt->url }}
+                            </td>
+
+                            <td style="padding: 12px; white-space: nowrap;">
+                                {{ $attempt->created_at->diffForHumans() }}
+                            </td>
+
+                        </tr>
+
+                        @endforeach
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div style="margin-top: 20px;">
+                {{ $attempts->links() }}
+            </div>
+
+            @else
+
+            <div class="empty-state">
+                <p>No blocked access attempts recorded.</p>
+                <p style="font-size: 48px; margin-top: 20px;">📋</p>
+            </div>
+
             @endif
         </div>
     </div>
 </body>
+
 </html>
